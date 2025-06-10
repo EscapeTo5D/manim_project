@@ -1,10 +1,8 @@
 cript = '''
 
 '''
-from manimlib import *
-from typing import Callable, Iterable, Tuple
+from manim_imports_ext import *
 from numpy import *
-
 
 class ShaderSurface(Surface):
     shader_folder: str = str(Path(Path(__file__).parent, "shader_surface"))
@@ -100,58 +98,6 @@ class CalabiYauSurface(Group):
         self.rotate(PI / 2, axis=RIGHT)
         self.scale(1.5)
 
-class RotatingShowCreate(Animation):
-    """
-    旋转创建动画 - 使用submobject机制实现逐个创建
-    """
-    def __init__(
-        self,
-        mobject: VMobject,
-        angle: float = PI,
-        axis: np.ndarray = OUT,
-        about_point: np.ndarray | None = None,
-        about_edge: np.ndarray | None = None,
-        lag_ratio: float = 1.0,  # 添加lag_ratio参数控制时间差
-        rate_func: Callable[[float], float] = linear,
-        **kwargs
-    ):
-        self.angle = angle
-        self.axis = axis
-        self.about_point = about_point
-        self.about_edge = about_edge
-        
-        super().__init__(
-            mobject, 
-            lag_ratio=lag_ratio,
-            rate_func=rate_func, 
-            **kwargs
-        )
-        
-        if self.about_point is None and self.about_edge is None:
-            self.about_point = mobject.get_center()
-    
-    def interpolate_submobject(
-        self,
-        submob: VMobject,
-        start_submob: VMobject,
-        alpha: float
-    ) -> None:
-        """对每个submobject分别处理创建和旋转"""
-        # 先复制数据
-        submob.data[:] = start_submob.data[:]
-        
-        # 应用创建效果（部分显示）
-        sub_alpha = self.rate_func(alpha)
-        submob.pointwise_become_partial(start_submob, 0, sub_alpha)
-        
-        # 应用旋转效果
-        submob.rotate(
-            sub_alpha * self.angle,
-            axis=self.axis,
-            about_point=self.about_point,
-            about_edge=self.about_edge,
-        )
-
 class ComplexSurfaceWireframe(VGroup):
     """复数函数曲面的线框表示"""
     def __init__(self, n=5, resolution=11, alpha=PI/4,**kwargs):
@@ -216,61 +162,9 @@ class ComplexSurfaceWireframe(VGroup):
 
         return lines
 
-class RotatingCreate(Animation):
-
-    def __init__(
-            self,
-            mobject: VMobject,
-            angle: float = PI,
-            axis: np.ndarray = OUT,
-            about_point: np.ndarray | None = None,
-            about_edge: np.ndarray | None = None,
-            run_time: float = 5.0,  # 添加默认运行时间
-            rate_func: Callable[[float], float] = linear,
-            **kwargs
-    ):
-        self.angle = angle
-        self.axis = axis
-        self.about_point = about_point
-        self.about_edge = about_edge
-
-        super().__init__(
-            mobject,
-            run_time=run_time,
-            rate_func=rate_func,
-            **kwargs
-        )
-
-        self.starting_mobject = mobject.copy()
-        if self.about_point is None and self.about_edge is None:
-            self.about_point = mobject.get_center()
-
-    def interpolate_mobject(self, alpha: float) -> None:
-        # 简化的单一方法实现
-        sub_alpha = self.rate_func(self.time_spanned_alpha(alpha))
-
-        # 数据复制和创建效果
-        for mob_target, mob_start in zip(
-                self.mobject.family_members_with_points(),
-                self.starting_mobject.family_members_with_points()
-        ):
-            mob_target.data[:] = mob_start.data[:]
-            mob_target.pointwise_become_partial(mob_start, 0, sub_alpha)
-
-        # 旋转
-        self.mobject.rotate(
-            sub_alpha * self.angle,
-            axis=self.axis,
-            about_point=self.about_point,
-            about_edge=self.about_edge,
-        )
 
 class CalabiYauSurfaceScene(InteractiveScene):
     def construct(self):
-        # 设置场景
-        run_time = 6
-        background = FullScreenRectangle(fill_color=BLACK).fix_in_frame()
-        self.add(background)
 
         # 设置TEXT 和 equation 公式
         title_e = Text(
@@ -296,37 +190,21 @@ class CalabiYauSurfaceScene(InteractiveScene):
         self.add(calabi_yau_45)
         self.wait(6)
 
-        # self.play(
-        #     LaggedStart(
-        #         surfaces_group.animate.rotate(PI / 2, axis=IN),
-        #         surfaces_group.animate.rotate(-PI / 2, axis=RIGHT),
-        #         Transform(title_e, title_c, run_time=1),
-        #         lag_ratio=0.3
-        #     ),
-        #     run_time=4
-        # )
-
-
 class ComplexSurfaceWireframeScene(InteractiveScene):
     def construct(self):
-        # 背景
-        background = FullScreenRectangle(fill_color=BLACK).fix_in_frame()
-        self.add(background)
 
         # 添加和展示线框
         wireframe = ComplexSurfaceWireframe()
         self.play(
-            RotatingShowCreate(wireframe),
-            run_time=4,
+            RotatingCreate(wireframe,
+            axis=UP,
+            angle=2*PI,
+            run_time=6,
             rate_func=linear
-        )
-
+        ))
 
 class CalabiYauVisualization(InteractiveScene):
     def construct(self):
-        # 背景
-        background = FullScreenRectangle(fill_color=BLACK).fix_in_frame()
-        self.add(background)
         # 添加卡拉比流形
         axes = ThreeDAxes()
         calabi_yau_shader = CalabiYauSurface(
@@ -336,6 +214,5 @@ class CalabiYauVisualization(InteractiveScene):
             resolution=(21, 21),
             brightness=1.1
         )
-        Rotate
         wireframe = ComplexSurfaceWireframe()
-        self.play(RotatingShowCreation(calabi_yau_shader, 2*PI, UP), run_time=4)
+        self.play(SpinShowCreation(calabi_yau_shader, 2*PI, UP), run_time=4)

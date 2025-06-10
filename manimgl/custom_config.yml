@@ -1,9 +1,10 @@
 directories:
   mirror_module_path: False
-  base: "C:/Users/smith/Videos"
+  base: "D:/manim_project"
   subdirs:
-    raster_images: "images//raster"
-    vector_images: "images//vector"
+    output: "C:/Users/smith/Videos"
+    raster_images: "images/raster"
+    vector_images: "images/vector"
     # Use the default value for the rest
 window:
   position_string: UR
