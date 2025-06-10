@@ -4,7 +4,6 @@ cript = '''
 from manim_imports_ext import *
 
 
-
 class CalabiYauSurfaceScene(InteractiveScene):
     def construct(self):
 
@@ -57,4 +56,4 @@ class CalabiYauVisualization(InteractiveScene):
             brightness=1.1
         )
         wireframe = ComplexSurfaceWireframe()
-        self.play(SpinShowCreation(calabi_yau_shader, 2*PI, UP), run_time=4)
+        self.play(ShowCreation(calabi_yau_shader), run_time=4)

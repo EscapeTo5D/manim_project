@@ -3,7 +3,7 @@ from numpy import *
 from typing import Callable, Iterable, Tuple
 
 class ShaderSurface(Surface):
-    shader_folder: str = str(Path(Path(__file__).parent, "shader_surface"))
+    shader_folder: str = str(Path(Path(__file__).parent.parent / "shader_surface"))
 
     def __init__(
             self,
