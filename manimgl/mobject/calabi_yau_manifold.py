@@ -146,7 +146,7 @@ class ComplexSurfaceWireframe(VGroup):
         for i in range(self.resolution):
             v_val = i / (self.resolution - 1)
             points = [surface_point(j / (self.resolution - 1), v_val) for j in range(self.resolution)]
-            line = VMobject().set_points_as_corners(points)
+            line = VMobject().set_points_smoothly(points)
             line.set_stroke(WHITE, width=1, opacity=0.8)
             lines.add(line)
 
