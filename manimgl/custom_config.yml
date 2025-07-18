@@ -1,10 +1,10 @@
 directories:
   mirror_module_path: False
-  base: "D:/manim_project"
+  base: "D:/manim_project/manimgl"
   subdirs:
     output: "C:/Users/smith/Videos"
-    raster_images: "images/raster"
-    vector_images: "images/vector"
+    raster_images: "images/raster_image"
+    vector_images: "images/vector_images"
     # Use the default value for the rest
 window:
   position_string: UR
@@ -12,8 +12,8 @@ window:
   full_screen: False
 camera:
   resolution: (3840, 2160)
-  background_color: "#000000"
-  fps: 30
+  background_color: "#1F1C1F"
+  fps: 60
   background_opacity: 1.0
 file_writer:
   saturation: 1.5

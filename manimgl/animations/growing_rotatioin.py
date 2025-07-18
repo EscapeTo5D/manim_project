@@ -1,5 +1,5 @@
 from manimlib import *
-from manimgl.utils.paths import spiral_path
+from utils.paths import spiral_path
 
 
 class SpinInFromNothing(GrowFromCenter):
