@@ -28,9 +28,11 @@ pip install manimgl
 pip install manim
 ```
 ### 环境变量
-```
-Windows:  set PYTHONPATH=项目根目录\manim_project\manimgl
-Linux/macOS:  export PYTHONPATH=项目根目录/manim_project/manimgl
+```bash
+# Windows:  
+set PYTHONPATH=项目根目录\manim_project\manimgl
+# Linux/macOS:  
+export PYTHONPATH=项目根目录/manim_project/manimgl
 ```
 ### 配置文件 | Configuration
 
