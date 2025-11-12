@@ -1,51 +1,87 @@
-# 🎬 manim_project
+# Manim 数学动画项目
 
-## 项目介绍 | Introduction
+基于Manim的数学动画制作项目，包含各种数学概念的动画示例和自定义组件。
 
-这是一个基于Manim的数学动画制作项目。Manim是一个由3Blue1Brown创建的动画引擎，用于创建精美的数学解释视频。本项目包含各种数学概念的动画示例和自定义组件。
+## 项目结构
 
-This is a mathematical animation project based on Manim. Manim is an animation engine created by 3Blue1Brown for creating beautiful math explanation videos. This project contains animation examples and custom components for various mathematical concepts.
-
-## 📁项目结构 | Project Structure
-
-- `manimgl/` - 使用ManimGL库的动画脚本和自定义组件
-  - `animations/` - 动画效果模块
-  - `mobject/` - 自定义图形对象
+- `manimgl/` - ManimGL库的动画脚本和自定义组件
+  - `animations/` - 自定义动画效果
+  - `mobject/` - 自定义图形对象 (超立方体、卡拉比-丘流形等)
   - `code_test/` - 测试脚本
-  - `shader_surface/` - 3D着色器表面相关代码
- 
-- `images/` - 储存的图像资源
+  - `einstein_scene/` - 爱因斯坦主题场景
 
-## 🚀环境配置 | Setup
+- `manimce/` - ManimCE库的场景
+  - `Lorentz/` - 洛伦兹变换
+  - `Fourier/` - 傅里叶级数
+  - `Gauss/` - 高斯几何
+  - `earth/` - 地球运动
 
-### 安装依赖 | Install Dependencies
+## 快速开始
+
+### 安装依赖
 
 ```bash
-# 安装ManimGL
-pip install manimgl
+# 使用uv (推荐)
+uv sync
 
-# 安装ManimCE
-pip install manim
+# 或使用pip
+pip install manim>=0.19.0 manimgl>=1.7.2
 ```
-### 环境变量
+
+### 环境配置
+
 ```bash
-# Windows:  
-set PYTHONPATH=项目根目录\manim_project\manimgl
-# Linux/macOS:  
-export PYTHONPATH=项目根目录/manim_project/manimgl
-```
-### 配置文件 | Configuration
+# Windows
+set PYTHONPATH=%cd%\manimgl
 
-## 📚 相关链接
+# Linux/macOS
+export PYTHONPATH=$(pwd)/manimgl
+```
+
+### 运行示例
+
+```bash
+# ManimGL - 超立方体动画
+manimgl manimgl/code_test/Hypercube.py HypercubeScene
+
+# ManimCE - 洛伦兹变换 (预览+低质量)
+manim -pql manimce/scene/Lorentz/Lorentz_factor.py LorentzFactorScene
+```
+
+## 常用命令
+
+```bash
+# ManimGL
+manimgl <script.py> <SceneName>
+
+# ManimCE
+manim [选项] <script.py> <SceneName>
+
+# 选项:
+# -p : 预览视频
+# -ql : 低质量 (快速)
+# -qh : 高质量
+# -k : 保留中间文件
+```
+
+## 主要组件
+
+- **动画类**: RotatingCreate, SpinShowCreation
+- **数学对象**: Hypercube, CalabiYauSurface
+- **工具函数**: rotation_matrix_4d(), spiral_path()
+
+## 配置文件
+
+- `manimgl/custom_config.yml` - ManimGL配置
+- `pyproject.toml` - 项目依赖
+
+## 相关链接
+
 - [ManimGL](https://github.com/3b1b/manim) - 3Blue1Brown的Manim库
 - [ManimCE](https://github.com/ManimCommunity/manim) - Manim社区版
-- [manimgl_docs](https://manimgl-zh.readthedocs.io/zh-cn/latest/) - manimgl中文文档
-- [manimce_docs](https://docs.manim.community/en/stable/) - manimce官方文档
+- [ManimGL中文文档](https://manimgl-zh.readthedocs.io/zh-cn/latest/)
+- [ManimCE官方文档](https://docs.manim.community/en/stable/)
 
-
-#### 脚本项目使用`manimgl/custom_config.yml`进行自定义配置，可根据需要修改分辨率、帧率等参数。
-
-
-## 许可证 | License
+## 许可证
 
 MIT License

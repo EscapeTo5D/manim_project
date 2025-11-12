@@ -192,3 +192,30 @@ cython_debug/
 #  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
 .cursorindexingignore
+
+# Manim specific
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.flv
+*.wmv
+*.webm
+*.gif
+media/
+video_dir/
+videos/
+temporary_files/
+*.tex
+*.aux
+*.log
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.figlist
+*.makefile
+*.dvi
+*.ps
+
+# Claude Code
+CLAUDE.md
