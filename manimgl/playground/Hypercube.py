@@ -186,6 +186,8 @@ class HypercubeScene(Scene):
         speed = 1
         t_tracker.add_updater(lambda m, dt: m.increment_value(speed * dt))
         lines = always_redraw(lambda: get_edges_group(t_tracker.get_value()),)
+
+        # 运行添加
         self.add(lines, t_tracker)
         self.wait(5*PI)
 

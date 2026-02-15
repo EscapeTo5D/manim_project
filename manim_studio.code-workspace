@@ -1,0 +1,33 @@
+{
+	"folders": [
+		{
+			"name": "📂 根目录 (资源与Git)",
+			"path": "."
+		},
+		{
+			"name": "🐍 ManimGL (3b1b版)",
+			"path": "manimgl"
+		},
+		{
+			"name": "🎨 ManimCE (社区版)",
+			"path": "manimce"
+		}
+	],
+	"settings": {
+		// 终端自动化：打开终端时自动激活对应子文件夹的 .venv
+		// "python.terminal.activateEnvironment": true,
+		// 排除根目录视图中的重复干扰（因为它们已经在子视图里显示了）
+		"files.exclude": {
+			"manimce": true,
+			"manimgl": true,
+			"**/.git": true,
+			"**/.DS_Store": true,
+			"**/__pycache__": true
+		},
+		"terminal.integrated.env.windows": {
+			"PYTHONPATH": "D:\\GitHub\\manim_project\\manimgl"
+		},
+		// 统一格式化工具（建议）
+		"editor.formatOnSave": true
+	}
+}

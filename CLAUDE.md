@@ -57,11 +57,11 @@ from manim_imports_ext import *
 manimgl <script.py> <SceneName>
 
 # 示例：运行超立方体场景
-manimgl manimgl/code_test/Hypercube.py HypercubeScene
+manimgl manimgl/playground/Hypercube.py HypercubeScene
 
 # 在指定场景文件中运行
 cd manimgl
-manimgl code_test/logo.py LogoScene
+manimgl scenes/logo.py LogoScene
 ```
 
 **ManimGL 特点**：
@@ -253,7 +253,7 @@ embed:
 3. **复用现有组件**
    - 优先使用 `animations/` 中的自定义动画
    - 复用 `mobject/` 中的数学对象
-   - 参考 `code_test/` 中的示例代码
+   - 参考 `playground/` 中的示例代码
 
 4. **模块化新功能**
    - 新动画类放入 `animations/`
@@ -262,8 +262,8 @@ embed:
    - 更新相应 `__init__.py` 导出
 
 5. **场景文件组织**
-   - 测试场景放入 `manimgl/code_test/`
-   - 主题场景放入对应主题目录
+   - 正式场景放入 `manimgl/scenes/`（按主题子目录组织）
+   - 实验/测试场景放入 `manimgl/playground/`
    - 使用清晰的命名约定
 
 ## 扩展阅读
@@ -271,4 +271,4 @@ embed:
 - `.claude/skills/manimgl-dev-guide/` - 完整的 ManimGL 开发指南
 - [ManimGL 官方文档](https://github.com/3b1b/manim)
 - [ManimCE 官方文档](https://docs.manim.community/en/stable/)
-- `manimgl/code_test/` - 各种示例场景和测试用例
+- `manimgl/playground/` - 实验场景和测试用例

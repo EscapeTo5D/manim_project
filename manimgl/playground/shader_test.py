@@ -3,11 +3,16 @@ from manimlib import *
 
 class TestGlsl(Scene):
     def construct(self):
+        # 正方形
         square = Square(side_length=4)
+        b_r, b_g, b_b = list(hex_to_rgb(BLUE))
+        r_r, r_g, r_b = list(hex_to_rgb(RED))
         square.set_color_by_code(f"""
-            vec3 blue = vec3{tuple(hex_to_rgb(BLUE))};
-            vec3 red = vec3{tuple(hex_to_rgb(RED))};
-            color.rgb = mix(blue, red, (point.x + 1.5) / 3);
+            vec3 blue = vec3({b_r}, {b_g}, {b_b});
+            vec3 red = vec3({r_r}, {r_g}, {r_b});
+            
+            // 混合颜色
+            color.rgb = mix(blue, red, (point.x + 1.5) / 3.0);
         """)
         self.add(square)
 
