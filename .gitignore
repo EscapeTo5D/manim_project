@@ -19,10 +19,13 @@ env/
 # uv.lock
 
 # -------------------
-# 3. Visual Studio Code
+# 3. Visual Studio Code / AI 辅助
 # -------------------
 # 忽略工作区特定的配置和缓存
 .vscode/
+# Claude Code 本地文件（不纳入版本管理）
+CLAUDE.md
+.claude/
 
 # 注意：如果你想保留 launch.json (调试配置) 分享给别人，
 # 请删除上面的 ".vscode/"，改为只忽略下面这几行：

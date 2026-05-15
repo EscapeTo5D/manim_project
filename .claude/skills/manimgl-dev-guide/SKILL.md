@@ -7,6 +7,14 @@ description: ManimGL Interactive VS Code 扩展开发指南。仅在 manimgl/ �
 
 > ManimGL Interactive VS Code 扩展（`maningl-preview`）的精准参考手册
 
+> [!CAUTION]
+> **本 skill 仅适用于 ManimGL（`manimlib`），不适用于 ManimCE（`manim`）。** 两者 API 差异很大（如 `ShowCreation` vs `Create`、`self.embed()` vs 无）。生成代码时务必参考以下 ManimGL 官方文档，避免使用 ManimCE 的 API。
+
+## ManimGL 官方文档
+
+- [ManimGL 中文文档](https://docs.manim.org.cn/documentation/) — API 参考、教程
+- [ManimGL 英文文档](https://3b1b.github.io/manim/index.html) — 3b1b 官方文档
+
 ## 文件导航
 
 | 文件 | 内容 |

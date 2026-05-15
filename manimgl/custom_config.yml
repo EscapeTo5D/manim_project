@@ -18,7 +18,7 @@ camera:
 file_writer:
   saturation: 1.5
 text:
-  font: "CMU Serif"
+  font: "LXGW WenKai"
   alignment: "CENTER"
 tex:
   template: "default"

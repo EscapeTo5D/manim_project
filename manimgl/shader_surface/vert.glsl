@@ -1,7 +1,6 @@
 #version 330
 in vec3 point;
-in vec3 du_point;
-in vec3 dv_point;
+in vec3 d_normal_point;
 in vec4 rgba;
 out vec4 v_color;
 #INSERT emit_gl_Position.glsl
@@ -24,7 +23,7 @@ vec3 spectrum(float t) {
     );
 }
 
-vec4 finalize_color(vec4 color, vec3 point, vec3 unit_normal){
+vec4 finalize_color(vec3 point, vec3 unit_normal){
     vec3 n = normalize(unit_normal);
     vec3 to_camera = normalize(camera_position - point);
 
@@ -91,18 +90,11 @@ void main() {
     // 设置顶点位置
     emit_gl_Position(point);
 
-    // 计算导数向量
-    vec3 du = du_point - point;
-    vec3 dv = dv_point - point;
-
-    // 计算法向量
-    vec3 normal = cross(du, dv);
-    float normal_mag = length(normal);
-
-    // 单位法向量，处理法向量为零的情况
-    vec3 unit_normal = (normal_mag < EPSILON) ?
-        vec3(0.0, 0.0, sign(point.z)) : normalize(normal);
+    // 从 d_normal_point 计算单位法向量 (Surface 基类提供的格式)
+    vec3 unit_normal = normalize(d_normal_point - point);
 
     // 计算最终颜色
-    v_color = finalize_color(rgba, point, unit_normal);
+    v_color = finalize_color(point, unit_normal);
+    // 使用 rgba.a 支持 ManimGL 动画透明度控制 (同时防止编译器优化掉 rgba)
+    v_color.a *= rgba.a;
 }
