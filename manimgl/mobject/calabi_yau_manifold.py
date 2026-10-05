@@ -1,23 +1,94 @@
 from manimlib import *
+from manimlib.renderer.uniform_block import COMMON_UNIFORMS, uniform_block_dtype
 from numpy import *
+import numpy as np
 from typing import Callable, Iterable, Tuple
 
+# 玻璃发光着色（自 shader_surface/*.glsl 移植为 WGSL）
+# 注入 finalize_color 上下文：可用变量 color/point/normal、frame.* 、mob.*
+# WGSL 不允许函数内定义函数，原 pal/spectrum 调色板已内联展开
+GLASS_EFFECT_WGSL = """
+// === 玻璃发光核心效果 ===
+let n = normalize(normal);
+let to_camera = normalize(frame.camera_position - point);
+
+// 1. 边缘发光效果 (Fresnel-like glow)
+var fresnel = 1.0 - abs(dot(n, to_camera));
+fresnel = pow(fresnel, 2.0); // 强化边缘
+
+// 2. 体积感的内部发光
+var inner_glow = 0.3 + 0.7 * sin(mob.time * 2.0 + length(point) * 3.0);
+inner_glow *= 0.4; // 控制强度
+
+// 3. 动态颜色波动 - 模拟4D几何的色彩变化
+let wave1 = sin(dot(point.xy, vec2f(2.0, 3.0)) + mob.time * 1.5);
+let wave2 = cos(dot(point.yz, vec2f(1.5, 2.5)) + mob.time * 2.0);
+let wave3 = sin(length(point.xz) * 2.0 - mob.time * 2.5);
+
+let color_shift = (wave1 + wave2 + wave3) * 0.2;
+let t = fresnel + color_shift + inner_glow;
+
+// 4. spectrum 调色板（pal 公式内联：0.5 + 0.5*cos(2π(t + (0.0, 0.33, 0.67)))）
+var base_color = 0.5 + 0.5 * cos(6.28318 * (t * 0.8 + 0.2 + vec3f(0.0, 0.33, 0.67)));
+
+// 5. 蓝绿色调 (模拟原始效果)
+base_color *= vec3f(1.4, 2.1, 1.7) * 0.7;
+
+// 6. 紫色环境光 (模拟体积渲染的紫色辉光)
+base_color += vec3f(0.6, 0.25, 0.7) * 0.3 * (0.5 + 0.5 * sin(mob.time + length(point)));
+
+// 7. 强烈的边缘高光
+let edge_highlight = pow(fresnel, 0.5) * 2.0;
+base_color += vec3f(0.8, 1.0, 1.2) * edge_highlight * 0.4;
+
+// 8. 深度雾化效果
+let depth = length(point - frame.camera_position);
+let fog_factor = smoothstep(2.0, 8.0, depth);
+base_color = mix(base_color, vec3f(0.1, 0.2, 0.4), fog_factor * 0.3);
+
+// 9. 距离衰减 (模拟体积渲染的衰减)
+base_color *= 1.0 / (1.0 + depth * 0.1);
+
+// 10. 动态亮度脉冲
+let pulse = 0.8 + 0.4 * sin(mob.time * 3.0 + dot(point, vec3f(1.0, 1.3, 0.7)));
+base_color *= pulse;
+
+// 11. 最终色彩强化和对比度调整
+base_color = pow(base_color, vec3f(0.8)) * 1.5; // 提升亮度
+base_color = pow(base_color, vec3f(1.2)); // 增加对比度
+
+// 12. 透明度效果（保留 mobject 自身 alpha，对应原 v_color.a *= rgba.a）
+let alpha = 0.7 + 0.3 * fresnel;
+color = vec4f(base_color * mob.brightness, alpha * color.a);
+"""
+
 class ShaderSurface(Surface):
-    shader_folder: str = str(Path(Path(__file__).parent.parent / "shader_surface"))
+    # 扩展 uniform 块：shader 中通过 mob.time / mob.brightness 访问
+    uniform_dtype: np.dtype = uniform_block_dtype(
+        *COMMON_UNIFORMS,
+        ("resolution", 2),
+        ("time", 1),
+        ("brightness", 1),
+    )
 
     def __init__(
             self,
             uv_func: Callable[[float, float], Iterable[float]],
             u_range: tuple[float, float] = (0, 1),
             v_range: tuple[float, float] = (0, 1),
-            brightness = 1.5,
+            brightness: float = 1.5,
             **kwargs
     ):
         self.passed_uv_func = uv_func
+        # 关闭 manim 内置光照（shading=0），原 GLSL 效果自带光照模拟
+        kwargs.setdefault("shading", (0.0, 0.0, 0.0))
         super().__init__(u_range=u_range, v_range=v_range, **kwargs)
 
+        # 注入自定义着色（替代旧 shader_folder 的 GLSL）
+        self.set_color_by_code(GLASS_EFFECT_WGSL)
+
         # 初始化shader uniforms
-        self.set_uniform(time=0)
+        self.set_uniform(time=0.0)
         self.set_uniform(brightness=brightness)
 
         # 添加时间更新器
@@ -27,7 +98,7 @@ class ShaderSurface(Surface):
         return self.passed_uv_func(u, v)
 
     def increment_time(self, dt):
-        self.uniforms["time"] += 1 * dt
+        self.uniforms["time"] += dt
         return self
 
 class CalabiYauSurface(Group):

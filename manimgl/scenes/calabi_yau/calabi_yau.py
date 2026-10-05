@@ -8,7 +8,6 @@ class CalabiYauSurfaceScene(InteractiveScene):
     def construct(self):
 
         # 设置TEXT 和 equation 公式
-        math_equation = Tex()
         title_e = Text(
             "Calabi-Yau Manifold",
             font_size=48,
